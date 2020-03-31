@@ -113,6 +113,13 @@ public class OAuth2ServerConfig {
         .authorizedGrantTypes("authorization_code")
         .scopes("app")
         .authorities("USER")
+        .redirectUris("http://localhost:8080/order/2", "http://localhost:8080/product/1")
+        .and()
+        .withClient("client_4")
+        .resourceIds(DEMO_RESOURCE_ID)
+        .authorizedGrantTypes("implicit")
+        .scopes("app")
+        .authorities("USER")
         .redirectUris("http://localhost:8080/order/2", "http://localhost:8080/product/1"); 
     }
 
