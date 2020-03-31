@@ -116,3 +116,28 @@ Date: Sat, 28 Mar 2020 15:00:17 GMT
 
 {"access_token":"b970784f-01c6-4619-ba35-fa606852d4b6","token_type":"bearer","refresh_token":"18b9a964-beaf-45a0-b3b4-650b8eda0fac","expires_in":43199,"scope":"select"}
 
+授权码模式：
+1. 在注入@EnableAuthorizationServer的扩展AuthorizationServerConfigurerAdapter的类的configure中，用形参ClientDetailsServiceConfigurer增加一个客户端，其grant_type为Authorization_code。
+2. @EnableWebSecurity应该同时应用。
+3. 对于需要授权访问的资源，目前服务启动之前就预设好，或者重启后才能发挥作用。
+4. 配置后，访问方式：
+   A）当访问/oauth/authorize时，以client_id, response_type=code和redirect_uri=为参数，
+   B）/oauth/authorize会导航到登录页面，用户登录成功后，
+   C) 会导航到用户授权页面。
+   D) 一旦授权许可后，会被导航到redirect_uri路径。
+ 访问例子
+ http://localhost:8080/oauth/authorize?response_type=code&client_id=client_3&redirect_uri=http://localhost:8080/order/2
+ 
+ 最终会以http://localhost:8080/order/2?code=liMtsZ的形式，访问redirect_uri。
+ 
+ 简化模式
+1. 在注入@EnableAuthorizationServer的扩展AuthorizationServerConfigurerAdapter的类的configure中，用形参ClientDetailsServiceConfigurer增加一个客户端，其grant_type为implicit。
+2. @EnableWebSecurity应该同时应用。
+3. 对于需要授权访问的资源，目前服务启动之前就预设好，或者重启后才能发挥作用。
+使用方式：
+ http://localhost:8080/oauth/authorize?response_type=token&client_id=client_4&redirect_uri=http://localhost:8080/order/2
+ 结果：
+ http://localhost:8080/order/2#access_token=a27cc6c6-f6a6-49ba-9b87-1af4253699b1&token_type=bearer&expires_in=43199&scope=app
+ 
+ 通过比较这四种模式，需要人为参与授权的是：授权码模式和简化模式。不需要人为授权的模式是客户端模式和密码模式，可以用在RESTful API的权限访问限制中。
+ 
