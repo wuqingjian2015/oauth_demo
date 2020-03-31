@@ -3,6 +3,7 @@ package com.wuqingjian.oauth_demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,20 +15,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
+@Order(2)
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
   @Autowired
   private PasswordEncoder passwordEncoder; 
 
-  // @Bean 
-  // @Override
-  // protected UserDetailsService userDetailsService(){
-  //   InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(); 
-  //   manager.createUser(User.withUsername("user_1").password(new BCryptPasswordEncoder().encode("123456")).authorities("USER").build());
-  //   manager.createUser(User.withUsername("user_2").password(new BCryptPasswordEncoder().encode("123456")).authorities("USER").build());
-  //   return manager; 
-  // }
+  @Bean 
+  @Override
+  protected UserDetailsService userDetailsService(){
+    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(); 
+    manager.createUser(User.withUsername("user_1").password(new BCryptPasswordEncoder().encode("123456")).authorities("USER").build());
+    manager.createUser(User.withUsername("user_2").password(new BCryptPasswordEncoder().encode("123456")).authorities("USER").build());
+    return manager; 
+  }
 
   @Bean 
   @Override 

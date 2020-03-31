@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AliasFor;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -35,6 +36,7 @@ public class OAuth2ServerConfig {
   }
 
   @Configuration
+  @Order(2)
   @EnableResourceServer
   protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Override
@@ -104,7 +106,14 @@ public class OAuth2ServerConfig {
         .authorizedGrantTypes("password", "refresh_token")
         .scopes("select")
         .authorities("USER")
-        .secret(new BCryptPasswordEncoder().encode("123456")); 
+        .secret(new BCryptPasswordEncoder().encode("123456"))
+        .and()
+        .withClient("client_3")
+        .resourceIds(DEMO_RESOURCE_ID)
+        .authorizedGrantTypes("authorization_code")
+        .scopes("app")
+        .authorities("USER")
+        .redirectUris("http://localhost:8080/order/2", "http://localhost:8080/product/1"); 
     }
 
     @Override
